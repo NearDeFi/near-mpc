@@ -3,12 +3,12 @@ use crate::{
     quote::QuoteBytes, report_data::ReportData,
 };
 use alloc::{format, string::String};
+use attestation_primitives::hash::{LauncherDockerComposeHash, MpcDockerImageHash};
 use borsh::{BorshDeserialize, BorshSerialize};
 use core::fmt;
 use dcap_qvl::verify::VerifiedReport;
 use derive_more::Constructor;
 use dstack_sdk_types::dstack::{EventLog, TcbInfo};
-use mpc_primitives::hash::{LauncherDockerComposeHash, MpcDockerImageHash};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256, Sha384};
 

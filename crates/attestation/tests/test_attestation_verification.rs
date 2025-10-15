@@ -2,11 +2,11 @@ use attestation::{
     attestation::{Attestation, MockAttestation},
     report_data::{ReportData, ReportDataV1},
 };
-use mpc_primitives::hash::{LauncherDockerComposeHash, MpcDockerImageHash};
-use rstest::rstest;
-use test_utils::attestation::{
+use attestation_primitives::hash::{LauncherDockerComposeHash, MpcDockerImageHash};
+use attestation_test_utils::attestation::{
     image_digest, launcher_compose_digest, mock_dstack_attestation, p2p_tls_key,
 };
+use rstest::rstest;
 
 #[rstest]
 #[case(MockAttestation::Valid, true)]

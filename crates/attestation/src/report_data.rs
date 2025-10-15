@@ -145,8 +145,8 @@ mod tests {
     use super::*;
     use crate::report_data::ReportData;
     use alloc::vec::Vec;
+    use attestation_test_utils::attestation::{p2p_tls_key, quote};
     use dcap_qvl::quote::Quote;
-    use test_utils::attestation::{p2p_tls_key, quote};
 
     #[test]
     fn test_from_str_valid() {

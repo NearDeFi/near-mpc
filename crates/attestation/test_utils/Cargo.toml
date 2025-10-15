@@ -1,0 +1,15 @@
+[package]
+name = "attestation-test-utils"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+attestation = { path = ".." }
+attestation-primitives = { path = "../primitives", features = ["abi"] }
+attestation-contract-interface = { path = "../contract-interface" }
+dstack-sdk-types = { version = "0.1.0", features = ["borsh"] }
+hex = { version = "0.4.3", features = ["serde"] }
+serde_json = "1.0.132"
+sha2 = "0.10.9"
+near-sdk = { version = "5.15.1", features = ["legacy", "unit-testing", "unstable"] }

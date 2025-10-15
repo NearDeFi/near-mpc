@@ -2,7 +2,7 @@ use dstack_sdk_types::dstack::TcbInfo as DstackTcbInfo;
 use serde_json::Value;
 
 use attestation::app_compose::AppCompose;
-use test_utils::attestation::{
+use attestation_test_utils::attestation::{
     TEST_APP_COMPOSE_STRING, TEST_APP_COMPOSE_WITH_SERVICES_STRING,
     TEST_LAUNCHER_IMAGE_COMPOSE_STRING, TEST_TCB_INFO_STRING,
 };

@@ -2,22 +2,28 @@
 name = "attestation"
 version = "0.1.0"
 edition = "2024"
+description = "Intel SGX attestation verification library with DCAP support for NEAR MPC"
+license = "MIT"
+repository = "https://github.com/near/mpc"
+readme = "README.md"
+keywords = ["sgx", "attestation", "dcap", "near", "mpc"]
+categories = ["cryptography", "no-std"]
 
 [dependencies]
-borsh = { workspace = true }
-dcap-qvl = { workspace = true }
-derive_more = { workspace = true }
-dstack-sdk-types = { workspace = true }
-hex = { workspace = true }
-mpc-primitives = { workspace = true }
-serde = { workspace = true }
-serde_with = { workspace = true }
-serde_json = { workspace = true }
-sha2 = { workspace = true }
-sha3 = { workspace = true }
-thiserror = { workspace = true }
-tracing = { workspace = true }
+borsh = { version = "1.5.1", features = ["derive"] }
+dcap-qvl = { version = "0.3.2", default-features = false, features = ["contract", "borsh", "std"] }
+derive_more = { version = "2.0.1", features = ["from", "deref", "into", "as_ref", "constructor"] }
+dstack-sdk-types = { version = "0.1.0", features = ["borsh"] }
+hex = { version = "0.4.3", features = ["serde"] }
+attestation-primitives = { path = "primitives", features = ["abi"] }
+serde = { version = "1.0.225", features = ["derive"] }
+serde_with = { version = "3.14.0", features = ["hex"] }
+serde_json = "1.0.132"
+sha2 = "0.10.9"
+sha3 = "0.10.8"
+thiserror = "2.0.12"
+tracing = "0.1.40"
 
 [dev-dependencies]
-rstest = { workspace = true }
-test_utils = { workspace = true }
+rstest = "0.25.0"
+attestation-test-utils = { path = "test_utils" }
