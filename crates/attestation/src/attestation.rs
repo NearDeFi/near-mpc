@@ -20,8 +20,11 @@ const EXPECTED_QUOTE_STATUS: &str = "UpToDate";
 const DSTACK_EVENT_TYPE: u32 = 134217729;
 
 const COMPOSE_HASH_EVENT: &str = "compose-hash";
-const KEY_PROVIDER_EVENT: &str = "key-provider";
-const MPC_IMAGE_HASH_EVENT: &str = "mpc-image-digest";
+
+// NOTE: removed for shade agent stack running on Phala Cloud
+
+// const KEY_PROVIDER_EVENT: &str = "key-provider";
+// const MPC_IMAGE_HASH_EVENT: &str = "mpc-image-digest";
 
 const RTMR3_INDEX: u32 = 3;
 
@@ -125,7 +128,7 @@ impl Attestation {
                 dstack_attestation,
                 expected_report_data,
                 timestamp_seconds,
-                allowed_mpc_docker_image_hashes,
+                // allowed_mpc_docker_image_hashes,
                 allowed_launcher_docker_compose_hashes,
             ),
             Self::Mock(mock_attestation) => verify_mock_attestation(
@@ -145,7 +148,8 @@ impl Attestation {
         attestation: &DstackAttestation,
         expected_report_data: ReportData,
         timestamp_seconds: u64,
-        allowed_mpc_docker_image_hashes: &[MpcDockerImageHash],
+        // NOTE: removed for shade agent stack running on Phala Cloud
+        // allowed_mpc_docker_image_hashes: &[MpcDockerImageHash],
         allowed_launcher_docker_compose_hashes: &[LauncherDockerComposeHash],
     ) -> bool {
         let expected_measurements = match ExpectedMeasurements::from_embedded_tcb_info() {
@@ -179,12 +183,15 @@ impl Attestation {
             && self.verify_static_rtmrs(report_data, &attestation.tcb_info, &expected_measurements)
             && self.verify_rtmr3(report_data, &attestation.tcb_info)
             && self.verify_app_compose(&attestation.tcb_info)
-            && self.verify_local_sgx_digest(&attestation.tcb_info, &expected_measurements)
-            && self.verify_mpc_hash(&attestation.tcb_info, allowed_mpc_docker_image_hashes)
             && self.verify_launcher_compose_hash(
                 &attestation.tcb_info,
                 allowed_launcher_docker_compose_hashes,
             )
+
+        // NOTE: removed for shade agent stack running on Phala Cloud
+
+        // && self.verify_local_sgx_digest(&attestation.tcb_info, &expected_measurements)
+        // && self.verify_mpc_hash(&attestation.tcb_info, allowed_mpc_docker_image_hashes)
     }
 
     /// Replays RTMR3 from the event log by hashing all relevant events together and verifies all
@@ -339,48 +346,55 @@ impl Attestation {
         app_compose.manifest_version == 2
             && app_compose.runner == "docker-compose"
             && !app_compose.kms_enabled
-            && app_compose.gateway_enabled == Some(false)
             && app_compose.public_logs
             && app_compose.public_sysinfo
-            && app_compose.local_key_provider_enabled
-            && app_compose.allowed_envs.is_empty()
-            && app_compose.no_instance_id
             && app_compose.secure_time == Some(true)
-            && app_compose.pre_launch_script.is_none()
+
+        // NOTE: removed for shade agent stack running on Phala Cloud
+
+        // && app_compose.gateway_enabled == Some(false)
+        // && app_compose.local_key_provider_enabled
+        // && app_compose.allowed_envs.is_empty()
+        // && app_compose.no_instance_id
+        // && app_compose.pre_launch_script.is_none()
     }
+
+    // NOTE: removed for shade agent stack running on Phala Cloud
 
     /// Verifies local key-provider event digest matches the expected digest.
-    fn verify_local_sgx_digest(
-        &self,
-        tcb_info: &TcbInfo,
-        expected_measurements: &ExpectedMeasurements,
-    ) -> bool {
-        let mut events = tcb_info
-            .event_log
-            .iter()
-            .filter(|event| event.event == KEY_PROVIDER_EVENT && event.imr == RTMR3_INDEX);
-        let digest_is_correct = events.next().is_some_and(|event| {
-            event.digest == hex::encode(expected_measurements.local_sgx_event_digest)
-        });
-        let single_repetition = events.next().is_none();
-        single_repetition && digest_is_correct
-    }
+    // fn verify_local_sgx_digest(
+    //     &self,
+    //     tcb_info: &TcbInfo,
+    //     expected_measurements: &ExpectedMeasurements,
+    // ) -> bool {
+    //     let mut events = tcb_info
+    //         .event_log
+    //         .iter()
+    //         .filter(|event| event.event == KEY_PROVIDER_EVENT && event.imr == RTMR3_INDEX);
+    //     let digest_is_correct = events.next().is_some_and(|event| {
+    //         event.digest == hex::encode(expected_measurements.local_sgx_event_digest)
+    //     });
+    //     let single_repetition = events.next().is_none();
+    //     single_repetition && digest_is_correct
+    // }
+
+    // NOTE: removed for shade agent stack running on Phala Cloud
 
     /// Verifies MPC node image hash is in allowed list.
-    fn verify_mpc_hash(&self, tcb_info: &TcbInfo, allowed_hashes: &[MpcDockerImageHash]) -> bool {
-        let mut mpc_image_hash_events = tcb_info
-            .event_log
-            .iter()
-            .filter(|event| event.event == MPC_IMAGE_HASH_EVENT && event.imr == RTMR3_INDEX);
+    // fn verify_mpc_hash(&self, tcb_info: &TcbInfo, allowed_hashes: &[MpcDockerImageHash]) -> bool {
+    //     let mut mpc_image_hash_events = tcb_info
+    //         .event_log
+    //         .iter()
+    //         .filter(|event| event.event == MPC_IMAGE_HASH_EVENT && event.imr == RTMR3_INDEX);
 
-        let digest_is_correct = mpc_image_hash_events.next().is_some_and(|event| {
-            allowed_hashes
-                .iter()
-                .any(|hash| hash.as_hex() == *event.event_payload)
-        });
-        let single_repetition = mpc_image_hash_events.next().is_none();
-        single_repetition && digest_is_correct
-    }
+    //     let digest_is_correct = mpc_image_hash_events.next().is_some_and(|event| {
+    //         allowed_hashes
+    //             .iter()
+    //             .any(|hash| hash.as_hex() == *event.event_payload)
+    //     });
+    //     let single_repetition = mpc_image_hash_events.next().is_none();
+    //     single_repetition && digest_is_correct
+    // }
 
     fn verify_launcher_compose_hash(
         &self,
